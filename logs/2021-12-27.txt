@@ -1,0 +1,131 @@
+[27-Dec-2021 19:13:21 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('500')
+#1 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php' on line 129
+[27-Dec-2021 19:13:21 Europe/Berlin] PHP Fatal error:  Uncaught Twig\Error\LoaderError: Unable to find template "404.html" (looked into: D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark/App/Views). in D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\vendor\twig\twig\src\Loader\FilesystemLoader.php:227
+Stack trace:
+#0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\vendor\twig\twig\src\Loader\FilesystemLoader.php(131): Twig\Loader\FilesystemLoader->findTemplate('404.html')
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\vendor\twig\twig\src\Environment.php(261): Twig\Loader\FilesystemLoader->getCacheKey('404.html')
+#2 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\vendor\twig\twig\src\Environment.php(309): Twig\Environment->getTemplateClass('404.html')
+#3 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\vendor\twig\twig\src\Environment.php(277): Twig\Environment->load('404.html')
+#4 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\View.php(36): Twig\Environment->render('404.html', Array)
+#5 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\View.php(22): Core\View::getTemplate('404.html', Array)
+#6 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Error.php(63): Core\View::renderTemplate('404.html')
+#7 [internal function]: Core\Error::exceptionHandler(Object(Exception))
+#8 {main}
+  thrown in D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\vendor\twig\twig\src\Loader\FilesystemLoader.php on line 227
+[27-Dec-2021 19:16:30 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('500')
+#1 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php' on line 129
+[27-Dec-2021 19:17:35 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('500')
+#1 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php' on line 129
+[27-Dec-2021 19:17:41 Europe/Berlin] Uncaught exception: 'Exception' with message 'Method qqAction not found in controller App\Controllers\Przychody'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('qq', Array)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/qq')
+#2 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php' on line 27
+[27-Dec-2021 19:17:48 Europe/Berlin] Uncaught exception: 'Exception' with message 'Method qqAction not found in controller App\Controllers\Przychody'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('qq', Array)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/qq')
+#2 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php' on line 27
+[27-Dec-2021 19:17:50 Europe/Berlin] Uncaught exception: 'Exception' with message 'Method qqAction not found in controller App\Controllers\Przychody'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('qq', Array)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/qq')
+#2 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php' on line 27
+[27-Dec-2021 19:17:53 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/')
+#1 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php' on line 129
+[27-Dec-2021 19:17:56 Europe/Berlin] Uncaught exception: 'Exception' with message 'Method dAction not found in controller App\Controllers\Przychody'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('d', Array)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/d')
+#2 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php' on line 27
+[27-Dec-2021 19:18:15 Europe/Berlin] Uncaught exception: 'Exception' with message 'Method degxexgAction not found in controller App\Controllers\Przychody'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('degxexg', Array)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/degxe...')
+#2 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php' on line 27
+[27-Dec-2021 19:18:18 Europe/Berlin] Uncaught exception: 'Exception' with message 'Method degxexgAction not found in controller App\Controllers\Login'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('degxexg', Array)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('login/degxexg')
+#2 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php' on line 27
+[27-Dec-2021 19:18:22 Europe/Berlin] Uncaught exception: 'Exception' with message 'Method degxexgAction not found in controller App\Controllers\Przychody'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('degxexg', Array)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/degxe...')
+#2 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php' on line 27
+[27-Dec-2021 19:18:23 Europe/Berlin] Uncaught exception: 'Exception' with message 'Method dAction not found in controller App\Controllers\Przychody'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('d', Array)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/d')
+#2 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php' on line 27
+[27-Dec-2021 19:18:24 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/')
+#1 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php' on line 129
+[27-Dec-2021 19:18:25 Europe/Berlin] Uncaught exception: 'Exception' with message 'Method qqAction not found in controller App\Controllers\Przychody'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('qq', Array)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/qq')
+#2 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php' on line 27
+[27-Dec-2021 19:20:41 Europe/Berlin] Uncaught exception: 'PDOException' with message 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'INSERTdq INTO incomes (userid, amount, date,  categoryid, comment)
+         ...' at line 1'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Models\Finance.php(53): PDOStatement->execute()
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Controllers\Przychody.php(31): App\Models\Finance->Add('2')
+#2 [internal function]: App\Controllers\Przychody->addAction()
+#3 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php(23): call_user_func_array(Array, Array)
+#4 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('add', Array)
+#5 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/add')
+#6 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Models\Finance.php' on line 53
+[27-Dec-2021 19:40:13 Europe/Berlin] Uncaught exception: 'ErrorException' with message 'Undefined variable $amount'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Models\Finance.php(25): Core\Error::errorHandler(2, 'Undefined varia...', 'D:\\XAMPP\\htdocs...', 25)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Controllers\Przychody.php(31): App\Models\Finance->Add('2')
+#2 [internal function]: App\Controllers\Przychody->addAction()
+#3 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php(23): call_user_func_array(Array, Array)
+#4 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('add', Array)
+#5 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/add')
+#6 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Models\Finance.php' on line 25
+[27-Dec-2021 19:40:25 Europe/Berlin] Uncaught exception: 'ErrorException' with message 'Undefined variable $amount'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Models\Finance.php(25): Core\Error::errorHandler(2, 'Undefined varia...', 'D:\\XAMPP\\htdocs...', 25)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Controllers\Przychody.php(31): App\Models\Finance->Add('2')
+#2 [internal function]: App\Controllers\Przychody->addAction()
+#3 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php(23): call_user_func_array(Array, Array)
+#4 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('add', Array)
+#5 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/add')
+#6 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Models\Finance.php' on line 25
+[27-Dec-2021 19:41:36 Europe/Berlin] Uncaught exception: 'ErrorException' with message 'Undefined property: App\Models\Income::$error'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Models\Finance.php(35): Core\Error::errorHandler(2, 'Undefined prope...', 'D:\\XAMPP\\htdocs...', 35)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Controllers\Przychody.php(31): App\Models\Finance->Add('2')
+#2 [internal function]: App\Controllers\Przychody->addAction()
+#3 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php(23): call_user_func_array(Array, Array)
+#4 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('add', Array)
+#5 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/add')
+#6 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Models\Finance.php' on line 35
+[27-Dec-2021 19:41:40 Europe/Berlin] Uncaught exception: 'ErrorException' with message 'Undefined property: App\Models\Income::$error'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Models\Finance.php(35): Core\Error::errorHandler(2, 'Undefined prope...', 'D:\\XAMPP\\htdocs...', 35)
+#1 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Controllers\Przychody.php(31): App\Models\Finance->Add('2')
+#2 [internal function]: App\Controllers\Przychody->addAction()
+#3 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php(23): call_user_func_array(Array, Array)
+#4 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('add', Array)
+#5 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/add')
+#6 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Models\Finance.php' on line 35
+[27-Dec-2021 19:50:26 Europe/Berlin] Uncaught exception: 'ErrorException' with message 'Undefined property: App\Models\Income::$error'
+Stack trace: #0 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Controllers\Przychody.php(35): Core\Error::errorHandler(2, 'Undefined prope...', 'D:\\XAMPP\\htdocs...', 35)
+#1 [internal function]: App\Controllers\Przychody->addAction()
+#2 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Controller.php(23): call_user_func_array(Array, Array)
+#3 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\Core\Router.php(121): Core\Controller->__call('add', Array)
+#4 D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\public\index.php(43): Core\Router->dispatch('przychody/add')
+#5 {main}
+Thrown in 'D:\XAMPP\htdocs\PersonalBudgetFinalQuestionMark\App\Controllers\Przychody.php' on line 35

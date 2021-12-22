@@ -13,10 +13,27 @@ class PaymentMethods extends \Core\Model {
     protected $defaultsTableName = Config::PAYMENT_METHDOS_DEFAULTS;
     protected $relationsTableName = Config::USERS_PAYMENTMETHODS_RELATIONS;
 
+    public function fetchAll() {
+        $sql = "SELECT * 
+                FROM $this->methodsTableName";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+        $stmt->execute();
+
+        $methods = $stmt->fetchAll();
+        $methods = $this->formatMethodsAssoc($methods);
+
+        return $methods;
+    }
+
     public function setDefaults ($db, $user) {        
         if ($defaults = $this->fetchDefaults()) {            
-            $this->insertDefaultMethods($db, $defaults);
-            $this->insertDefaultMethodsReferences($db, $defaults, $user->userid);
+            $insertedMethodsIds = $this->insertDefaultMethods($db, $defaults);
+            $this->insertDefaultMethodsReferences($db, $defaults, $user->userid, $insertedMethodsIds);
             return true;
         } else {
             return false;
@@ -43,23 +60,33 @@ class PaymentMethods extends \Core\Model {
 
         $stmt = $db->prepare($sql);
 
-        foreach ($defaults as $category) {
-            $stmt->bindValue(':method', $category['method'], PDO::PARAM_STR);
+        $insertedMethodsIds = [];
+
+        foreach ($defaults as $method) {
+            $stmt->bindValue(':method', $method['method'], PDO::PARAM_STR);
             try {                
                 $stmt->execute();
+                $insertedMethodsIds[$method['method']] = $db->lastInsertId();
             } catch (Exception $e) {}
         }
+        
+        return $insertedMethodsIds;
     }
 
-    protected function insertDefaultMethodsReferences ($db, $defaults, $userid) {
+    protected function insertDefaultMethodsReferences ($db, $defaults, $userid, $insertedMethodsIds) {
         $sql = "INSERT INTO $this->relationsTableName (userid, methodid)
                 VALUES (:userid, :methodid)";
 
         $stmt = $db->prepare($sql);   
 
         foreach ($defaults as $default) {
+            if (array_key_exists($default['method'], $insertedMethodsIds)) {
+                $methodId = $insertedMethodsIds[$default['method']];
+            } else {
+                $methodId = $this->fetchMethodIdByName($default['method']);
+            }
             $stmt->bindValue(':userid', $userid, PDO::PARAM_INT );
-            $stmt->bindValue(':methodid', $this->fetchMethodIdByName($default['method']), PDO::PARAM_INT);
+            $stmt->bindValue(':methodid', $methodId, PDO::PARAM_INT);
             try {
                 $stmt->execute();
             } catch (Exception $e) {}
@@ -83,5 +110,13 @@ class PaymentMethods extends \Core\Model {
         return $stmt->fetch()['methodid'] ?? false;
     }
 
-
+    public function formatMethodsAssoc($methods) {
+        if ($methods) {
+            foreach($methods as $row => $value) {
+                $methodsFormated[$value['methodid']] = $value['method'];
+            }
+            return $methodsFormated;
+        }
+        return $methods;
+    }
 }

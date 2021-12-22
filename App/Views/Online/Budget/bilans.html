@@ -6,4 +6,44 @@
 
     <h1>BILANS</h1>
 
+    <form method="post" action="" id="postDates">              
+
+        <div class="form-group">
+            <!-- <label for="inputAmount" class="form-label">Kwota:</label> -->
+            <input type="hidden" id="inputAmount" name="amount" placeholder="Kwota"
+            class="form-control"
+            autofocus required/>
+        </div>
+        <div>
+            <label for="selectPeriod" class="form-label">Okres bilansu:</label>
+            <select class="form-select" id="selectPeriod" name="period">      
+                {% for period in datePeriodCategories %}                    
+                    <option>{{ period }}</option>                    
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="inputDateFrom" class="form-label">Data od:</label>
+            <input id="inputDateFrom" name="dateFrom" placeholder="date" type="date"
+            class="form-control"
+            required/>
+        </div>
+        <div class="form-group">
+            <label for="inputDateTo" class="form-label">Data do:</label>
+            <input id="inputDateTo" name="dateTo" placeholder="date" type="date"
+            class="form-control"
+            required/>
+        </div>
+
+        
+        <div>
+            <label for="textareaComment" class="form-label">Komentarz:</label>
+            <textarea class="form-control" id="textareaComment" name="comment" rows="4"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Dodaj</button>
+        <a class="btn btn-danger" href="" role="button">Anuluj</a>  
+
+    </form>
+
 {% endblock %}

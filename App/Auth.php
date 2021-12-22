@@ -5,7 +5,6 @@ namespace App;
 use \App\Models\User;
 use \App\Models\RememberedLogin;
 
-
 class Auth
 {
     public static function login($user, $remember_me) {

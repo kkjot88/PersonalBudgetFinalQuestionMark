@@ -12,10 +12,13 @@
 <div>
     <label for="selectMethod" class="form-label">Metoda płatności:</label>
     <select class="form-select" id="selectMethod" name="method">
-        <option selected>Open this select menu</option>
-        <option>One</option>
-        <option>Two</option>
-        <option>Three</option>
+        {% for method in methods %}
+            {% if finance.method == method %}
+                <option selected>{{ method }}</option>
+            {% else %}
+                <option>{{ method }}</option>
+            {% endif %}    
+        {% endfor %}
     </select>
 </div>
 {% endblock %}

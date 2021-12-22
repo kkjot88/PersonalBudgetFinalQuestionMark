@@ -32,4 +32,7 @@ class Config
     const PAYMENT_METHODS = 'paymentmethods';
     const PAYMENT_METHDOS_DEFAULTS = 'paymentmethods_default';
     const USERS_PAYMENTMETHODS_RELATIONS = 'users_paymentmethods';
+
+    const DATE_PERIOD_CATEGORIES = ["Bieżący miesiąc", "Poprzedni miesiąc", "Bieżący rok", "Niestandardowy"];
+    
 }

@@ -1,5 +1,17 @@
 {% extends 'Online/base.html' %}
 
+{% block footer %}
+    <script>        
+        var cleave = new Cleave('#inputAmount', {
+            numeral: true,
+            numeralPositiveOnly: true,
+            delimiter: ' ',
+            numeralDecimalMark: ',',
+            numeralThousandsGroupStyle: 'thousand'
+        });
+    </script>
+{% endblock %}
+
 {% block body %}   
 
     {% block header %}
@@ -26,18 +38,21 @@
             <label for="inputDate" class="form-label">Data:</label>
             <input id="inputDate" name="date" placeholder="date" type="date"
             class="form-control"
-            required
-            />
+            value="{{ finance.date }}"
+            required/>
         </div>
         {% block paymentMethod %}
         {% endblock %}
         <div>
             <label for="selectCategory" class="form-label">Kategoria:</label>
-            <select class="form-select" id="selectCategory" name="category">
-                <option selected>Open this select menu</option>
-                <option>One</option>
-                <option>Two</option>
-                <option>Three</option>
+            <select class="form-select" id="selectCategory" name="category">      
+                {% for category in categories %}
+                    {% if finance.category == category %}
+                        <option selected>{{ category }}</option>
+                    {% else %}
+                        <option>{{ category }}</option>
+                    {% endif %}    
+                {% endfor %}
             </select>
         </div>
         <div>

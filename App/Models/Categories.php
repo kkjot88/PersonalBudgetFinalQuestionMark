@@ -11,9 +11,8 @@ abstract class Categories extends \Core\Model {
     protected $categoriesTableName;
     protected $defaultsTableName;
     protected $relationsTableName;
-
-    /*
-    public function fetchCategories() {
+    
+    public function fetchAll() {
         $sql = "SELECT * 
                 FROM $this->categoriesTableName";
 
@@ -22,15 +21,18 @@ abstract class Categories extends \Core\Model {
 
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
-        $stmt->execute();        
+        $stmt->execute();
 
-        return $stmt->fetchAll();
-    }*/
+        $categories = $stmt->fetchAll();
+        $categories = $this->formatCategoriesAssoc($categories);
+        
+        return $categories;
+    }
 
     public function setDefaults($db, $user) {
         if ($defaults = $this->fetchDefaults()) {            
-            $this->insertDefaultCategories($db, $defaults);
-            $this->insertDefaultCategoriesReferences($db, $defaults, $user->userid);
+            $insertedDefaultCategories = $this->insertDefaultCategories($db, $defaults);
+            $this->insertDefaultCategoriesReferences($db, $defaults, $user->userid, $insertedDefaultCategories);
             return true;
         } else {
             return false;
@@ -57,23 +59,33 @@ abstract class Categories extends \Core\Model {
 
         $stmt = $db->prepare($sql);
 
+        $insertedCategoriesIds = [];
+
         foreach ($defaults as $category) {
             $stmt->bindValue(':category', $category['category'], PDO::PARAM_STR);
-            try {                
+            try {                                
                 $stmt->execute();
+                $insertedCategoriesIds[$category['category']] = $db->lastInsertId();
             } catch (Exception $e) {}
         }
+
+        return $insertedCategoriesIds;
     }
 
-    protected function insertDefaultCategoriesReferences ($db, $defaults, $userid) {
+    protected function insertDefaultCategoriesReferences ($db, $defaults, $userid, $insertedDefaultCategories = []) {
         $sql = "INSERT INTO $this->relationsTableName (userid, categoryid)
-                VALUES (:userid, :categoryid)";
+                VALUES (:userid, :categoryid)";    
 
         $stmt = $db->prepare($sql);   
 
         foreach ($defaults as $default) {
+            if (array_key_exists($default['category'], $insertedDefaultCategories)) {
+                $categoryId = $insertedDefaultCategories[$default['category']];
+            } else {
+                $categoryId = $this->fetchCategoryIdByName($default['category']);
+            }
             $stmt->bindValue(':userid', $userid, PDO::PARAM_INT );
-            $stmt->bindValue(':categoryid', $this->fetchCategoryIdByName($default['category']), PDO::PARAM_INT);
+            $stmt->bindValue(':categoryid', $categoryId, PDO::PARAM_INT);
             try {
                 $stmt->execute();
             } catch (Exception $e) {}
@@ -115,7 +127,18 @@ abstract class Categories extends \Core\Model {
         return $stmt->fetchAll();
     } //////////////////////////////////////////////////////////    
 
+    public function formatCategoriesAssoc($categories) {
+        if ($categories) {
+            foreach($categories as $row => $value) {
+                $categoriesFormated[$value['categoryid']] = $value['category'];
+            }
+            return $categoriesFormated;
+        }
+        return $categories;
+    }
+
     public function insertCategory($category) {
 
     }
+    
 }

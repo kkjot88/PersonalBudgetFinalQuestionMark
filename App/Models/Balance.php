@@ -5,10 +5,21 @@ namespace App\Models;
 use Core\Error;
 
 use App\Incomes;
-use App\IncomeCategories;
 use App\Expenses;
-use App\ExpenseCategories;
+
+use App\Config;
 
 class Balance extends \Core\Model {
+
+    public $incomeCategories;
+    public $expenseCategories;
+    public $datePeriodCategories;
+
+    public function __construct()
+    {
+        $this->incomeCategories = new IncomeCategories();
+        $this->expenseCategories = new ExpenseCategories();
+        $this->datePeriodCategories = Config::DATE_PERIOD_CATEGORIES;
+    }
 
 }

@@ -17,7 +17,7 @@ class Login extends \Core\Controller
         if (!Auth::getUser()) {
             View::renderTemplate('Offline/Login/new.html');
         } else {
-            View::renderTemplate('Online/Budget/przychody.html');
+            $this->redirect('/przychody/index');
         }
     }
 
