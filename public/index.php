@@ -32,7 +32,7 @@ session_start();
 $router = new Core\Router();
 
 // Add the routes
-$router->add('', ['controller' => 'Przychody', 'action' => 'index']);
+$router->add('', ['controller' => 'Login', 'action' => 'new']);
 $router->add('login', ['controller' => 'Login', 'action' => 'new']);
 $router->add('przychody', ['controller' => 'Przychody', 'action' => 'index']);
 $router->add('logout', ['controller' => 'Login', 'action' => 'destroy']);

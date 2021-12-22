@@ -10,9 +10,9 @@ namespace App;
 class Config
 {
     const DB_HOST = 'localhost';
-    const DB_NAME = 'mvclogin';
-    const DB_USER = 'mvcuser';
-    const DB_PASSWORD = '1234';
+    const DB_NAME = 'personal_budget';
+    const DB_USER = 'root';
+    const DB_PASSWORD = '';
     const SHOW_ERRORS = true;
     
     const SECRET_KEY = '58C1DE2D452CBC5C2BB183D4C171A';

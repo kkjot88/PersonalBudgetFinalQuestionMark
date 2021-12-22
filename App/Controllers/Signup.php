@@ -5,6 +5,10 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Models\User;
 
+use \Core\Error;
+use \App\Models\IncomeCategories;
+use \App\Models\ExpenseCategories;
+
 class Signup extends \Core\Controller
 {
     public function newAction()
@@ -15,12 +19,15 @@ class Signup extends \Core\Controller
     public function createAction()
     {
         $user = new User($_POST);
+        $incomesCategories = new IncomeCategories();
+        $expenseCategories = new ExpenseCategories();
 
         if ($user->save()) {
-            $user->sendActivationEmail();
+            $incomesCategories->setDefaultsOnSignUp($user);
+            $expenseCategories->setDefaultsOnSignUp($user);
             $this->redirect('/signup/success');
         } else {
-            View::renderTemplate('Signup/new.html', [
+            View::renderTemplate('Offline/Signup/new.html', [
                 'user' => $user
             ]);
         }
@@ -28,15 +35,15 @@ class Signup extends \Core\Controller
 
     public function successAction()
     {
-        View::renderTemplate('Signup/success.html');
+        View::renderTemplate('Offline/Signup/success.html');
     }
 
     public function activateAction() {
-        User::activate($this->route_params['token']);
+        //User::activate($this->route_params['token']);
         $this->redirect('/signup/activated');
     }
 
     public function activatedAction() {
-        View::renderTemplate('Signup/activated.html');
+        View::renderTemplate('Offline/Signup/activated.html');
     }
 }

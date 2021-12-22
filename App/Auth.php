@@ -10,7 +10,7 @@ class Auth
 {
     public static function login($user, $remember_me) {
         session_regenerate_id(true);
-        $_SESSION['user_id'] = $user->id;   
+        $_SESSION['user_id'] = $user->userid;   
 
         if ($remember_me) {
             if ($user->rememberLogin()) {
