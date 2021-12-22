@@ -27,13 +27,17 @@ abstract class Categories extends \Core\Model {
         return $stmt->fetchAll();
     }*/
 
-    public function setDefaultsOnSignUp($user) {
-        $defaults = $this->fetchDefaults();
-        $this->insertDefaultCategories($defaults);
-        $this->insertDefaultCategoriesReferences($defaults, $user->userid);
+    public function setDefaults($db, $user) {
+        if ($defaults = $this->fetchDefaults()) {            
+            $this->insertDefaultCategories($db, $defaults);
+            $this->insertDefaultCategoriesReferences($db, $defaults, $user->userid);
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public function fetchDefaults() {   
+    protected function fetchDefaults() {   
         $sql = "SELECT * 
                 FROM $this->defaultsTableName";
 
@@ -47,11 +51,10 @@ abstract class Categories extends \Core\Model {
         return $stmt->fetchAll();
     }
 
-    public function insertDefaultCategories($defaults) {
+    protected function insertDefaultCategories($db, $defaults) {
         $sql = "INSERT INTO $this->categoriesTableName (category)
                 VALUES (:category)";
 
-        $db = static::getDB();
         $stmt = $db->prepare($sql);
 
         foreach ($defaults as $category) {
@@ -62,11 +65,10 @@ abstract class Categories extends \Core\Model {
         }
     }
 
-    public function insertDefaultCategoriesReferences ($defaults, $userid) {
+    protected function insertDefaultCategoriesReferences ($db, $defaults, $userid) {
         $sql = "INSERT INTO $this->relationsTableName (userid, categoryid)
                 VALUES (:userid, :categoryid)";
 
-        $db = static::getDB();
         $stmt = $db->prepare($sql);   
 
         foreach ($defaults as $default) {

@@ -14,23 +14,26 @@
         </ul>
     {% endif %}
 
-    <form method="post" action="" id="addIncome">
+    <form method="post" action="{% block action %}{% endblock %}" id="addIncome">
 
         <div class="form-group">
             <label for="inputAmount" class="form-label">Kwota:</label>
-            <input id="inputAmount" name="amount" placeholder="Kwota" autofocus required 
-            class="form-control"/>
+            <input id="inputAmount" name="amount" placeholder="Kwota"
+            class="form-control"
+            autofocus required/>
         </div>
         <div class="form-group">
             <label for="inputDate" class="form-label">Data:</label>
-            <input id="inputDate" name="date" placeholder="date" required type="date"
-            class="form-control"/>
+            <input id="inputDate" name="date" placeholder="date" type="date"
+            class="form-control"
+            required
+            />
         </div>
         {% block paymentMethod %}
         {% endblock %}
         <div>
             <label for="selectCategory" class="form-label">Kategoria:</label>
-            <select class="form-select" id="selectCategory">
+            <select class="form-select" id="selectCategory" name="category">
                 <option selected>Open this select menu</option>
                 <option>One</option>
                 <option>Two</option>
@@ -39,8 +42,12 @@
         </div>
         <div>
             <label for="textareaComment" class="form-label">Komentarz:</label>
-            <textarea class="form-control" id="textareaComment" rows="4"></textarea>
+            <textarea class="form-control" id="textareaComment" name="comment" rows="4"></textarea>
         </div>
+
+        <button type="submit" class="btn btn-primary">Dodaj</button>
+        <a class="btn btn-danger" href="" role="button">Anuluj</a>
+
     </form>
 
 {% endblock %}

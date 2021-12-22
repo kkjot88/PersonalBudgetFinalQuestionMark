@@ -2,6 +2,8 @@
 
 {% block title %}Wydatki{% endblock %}
 
+{% block action %}/wydatki/add{% endblock %}
+
 {% block header %}
     <h1>Wydatki</h1>
 {% endblock %}
@@ -9,7 +11,7 @@
 {% block paymentMethod %}
 <div>
     <label for="selectMethod" class="form-label">Metoda płatności:</label>
-    <select class="form-select" id="selectMethod">
+    <select class="form-select" id="selectMethod" name="method">
         <option selected>Open this select menu</option>
         <option>One</option>
         <option>Two</option>

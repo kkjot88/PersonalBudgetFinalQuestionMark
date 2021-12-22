@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-class IncomeCategories extends Categories {
+use App\Config;
 
+class IncomeCategories extends Categories {
     public function __construct()
     {
-        $this->categoriesTableName = 'incomecategories';
-        $this->defaultsTableName = 'incomecategories_default';
-        $this->relationsTableName = 'users_incomecategories';
+        $this->categoriesTableName = Config::INCOMES_CATEGORIES;
+        $this->defaultsTableName = Config::INCOMES_CATEGORIES_DEFAULTS;
+        $this->relationsTableName = Config::USERS_INCOMESCATEGORIES_RELATIONS;
     }
-
 }

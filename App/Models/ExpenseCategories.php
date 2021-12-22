@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-class ExpenseCategories extends Categories {
+use App\Config;
 
+class ExpenseCategories extends Categories {
     public function __construct()
     {
-        $this->categoriesTableName = 'expensecategories';
-        $this->defaultsTableName = 'expensecategories_default';
-        $this->relationsTableName = 'users_expensecategories';
+        $this->categoriesTableName = Config::EXPENSES_CATEGORIES;
+        $this->defaultsTableName = Config::EXPENSES_CATEGORIES_DEFAULTS;
+        $this->relationsTableName = Config::USERS_EXPENSECATEGORIES_RELATIONS;
     }
 }

@@ -30,36 +30,56 @@ class User extends \Core\Model
     {
         $this->validate();
 
-        if (empty($this->errors)) {
-
-            $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
-
-            //$token = new Token();
-            //$hashed_token = $token->getHash();
-            //$this->activation_token = $token->getValue();
-
-            //$sql = 'INSERT INTO users (name, email, password_hash, activation_hash)
-            //        VALUES (:name, :email, :password_hash, :activation_hash)';
-
-            $sql = 'INSERT INTO users (name, email, password)
-            VALUES (:name, :email, :password_hash)';
+        if (empty($this->errors)) {            
+            $incomesCategories = new IncomeCategories();
+            $expensesCategories = new ExpenseCategories();
+            $paymentMethods = new PaymentMethods();
 
             $db = static::getDB();
-            $stmt = $db->prepare($sql);
+            $db->beginTransaction();
 
-            $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
-            $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
-            $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
-            ///$stmt->bindValue(':activation_hash', $hashed_token, PDO::PARAM_STR);
+            $insertUserResult = $this->insertUser($db);
+            $insertIncomesCategoriesResult = $incomesCategories->setDefaults($db, $this);
+            $insertExpensesCategoriesResult = $expensesCategories->setDefaults($db, $this);
+            $insertPaymentMethodsResult = $paymentMethods->setDefaults($db, $this);
 
-            $success = $stmt->execute();
+            if ($insertUserResult && $insertIncomesCategoriesResult && $insertExpensesCategoriesResult && $insertPaymentMethodsResult) {                    
+                $db->commit();
+                return true;
+            }
 
-            $this->userid = $db->lastInsertId();
-
-            return $success;
+            $db->rollBack();
+            return false;
         }
 
         return false;
+    }
+
+    protected function insertUser ($db) {
+        $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
+
+        //$token = new Token();
+        //$hashed_token = $token->getHash();
+        //$this->activation_token = $token->getValue();
+
+        //$sql = 'INSERT INTO users (name, email, password_hash, activation_hash)
+        //        VALUES (:name, :email, :password_hash, :activation_hash)';
+
+        $sql = 'INSERT INTO users (name, email, password)
+        VALUES (:name, :email, :password_hash)';
+
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
+        $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+        $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+        ///$stmt->bindValue(':activation_hash', $hashed_token, PDO::PARAM_STR);
+
+        $result = $stmt->execute();
+        
+        $this->userid = $db->lastInsertId();
+
+        return $result;
     }
     
     public function validate()

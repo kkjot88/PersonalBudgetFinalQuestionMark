@@ -19,12 +19,8 @@ class Signup extends \Core\Controller
     public function createAction()
     {
         $user = new User($_POST);
-        $incomesCategories = new IncomeCategories();
-        $expenseCategories = new ExpenseCategories();
 
         if ($user->save()) {
-            $incomesCategories->setDefaultsOnSignUp($user);
-            $expenseCategories->setDefaultsOnSignUp($user);
             $this->redirect('/signup/success');
         } else {
             View::renderTemplate('Offline/Signup/new.html', [
