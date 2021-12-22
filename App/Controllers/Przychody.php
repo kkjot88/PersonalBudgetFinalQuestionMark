@@ -5,7 +5,8 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Auth;
 use \Core\Error;
-use App\Models\Incomes;
+use App\Models\Income;
+use App\Models\IncomeCategories;
 use App\Models\PaymentMethods;
 
 class Przychody extends Authenticated {
@@ -15,18 +16,19 @@ class Przychody extends Authenticated {
         $this->user = Auth::getUser();
     }
 
-    public function indexAction () {        
+    public function indexAction () {
         View::renderTemplate('Online/Budget/przychody.html', [
-            'user' => $this->user
+            'user' => $this->user,
+            'categories' => (new IncomeCategories())->fetchAll()
         ]);
     }
 
     public function addAction () {
 
-        $incomes = new Incomes($_POST);
-        $incomes->Add();
+        $income = new Income($_POST);
+        $income->Add($this->user->userid);
 
-        Error::console($incomes);
+        Error::console($income);
         exit();
     }
 }

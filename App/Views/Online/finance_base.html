@@ -33,11 +33,10 @@
         {% endblock %}
         <div>
             <label for="selectCategory" class="form-label">Kategoria:</label>
-            <select class="form-select" id="selectCategory" name="category">
-                <option selected>Open this select menu</option>
-                <option>One</option>
-                <option>Two</option>
-                <option>Three</option>
+            <select class="form-select" id="selectCategory" name="category">                
+                {% for category in categories %}
+                    <option>{{ category }}</option>
+                {% endfor %}
             </select>
         </div>
         <div>

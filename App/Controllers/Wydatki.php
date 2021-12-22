@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Auth;
-use \App\Models\Expenses;
-
+use \App\Models\Expense;
+use App\Models\ExpenseCategories;
 use Core\Error;
 
 class Wydatki extends Authenticated {
@@ -17,18 +17,17 @@ class Wydatki extends Authenticated {
 
     public function indexAction () {
         View::renderTemplate('Online/Budget/wydatki.html', [
-            'user' => $this->user
+            'user' => $this->user,
+            'categories' => (new ExpenseCategories())->fetchAll()
         ]);
     }  
 
     public function addAction () {   
-        echo "booom";
         
-        $expenses = new Expenses($_POST);
-        exit();
-        $expenses->Add();
+        $expense = new Expense($_POST);
+        $expense->Add($this->user->userid);
         
-        Error::console($expenses);
+        Error::console($expense);
         exit();
     }
 }

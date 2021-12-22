@@ -11,9 +11,8 @@ abstract class Categories extends \Core\Model {
     protected $categoriesTableName;
     protected $defaultsTableName;
     protected $relationsTableName;
-
-    /*
-    public function fetchCategories() {
+    
+    public function fetchAll() {
         $sql = "SELECT * 
                 FROM $this->categoriesTableName";
 
@@ -22,10 +21,18 @@ abstract class Categories extends \Core\Model {
 
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
-        $stmt->execute();        
+        $stmt->execute();
 
-        return $stmt->fetchAll();
-    }*/
+        $categoriesRaw = $stmt->fetchAll();
+
+        if ($categoriesRaw) {
+            foreach($categoriesRaw as $row => $value) {
+                $categories[$value['categoryid']] = $value['category'];
+            }
+            return $categories;
+        }
+        return $categoriesRaw;
+    }
 
     public function setDefaults($db, $user) {
         if ($defaults = $this->fetchDefaults()) {            
@@ -81,6 +88,9 @@ abstract class Categories extends \Core\Model {
     }
 
     public function fetchCategoryIdByName($category) {
+
+        Error::console($category);
+
         $sql = "SELECT categoryid
                 FROM $this->categoriesTableName
                 WHERE category = :category";      
