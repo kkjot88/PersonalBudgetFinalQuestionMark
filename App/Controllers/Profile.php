@@ -20,7 +20,7 @@ class Profile extends Authenticated {
     }      
 
     public function editAction() {
-        View::renderTemplate('Profile/edit.html', [
+        View::renderTemplate('Online/Profile/edit.html', [
             'user' => $this->user
         ]);
     }
@@ -30,7 +30,7 @@ class Profile extends Authenticated {
             Flash::addMessage('Changes saved');
             $this->redirect('/profile/show');
         } else {
-            View::renderTemplate('Profile/edit.html', [
+            View::renderTemplate('Online/Profile/edit.html', [
                 'user' => $this->user
             ]);
         }

@@ -8,11 +8,17 @@ use \App\Models\User;
 
 use \Core\View;
 
+use \Core\Error;
+
 class Login extends \Core\Controller
 {   
-    public function newAction()
+    public function newAction()    
     {
-        View::renderTemplate('Offline/Login/new.html');
+        if (!Auth::getUser()) {
+            View::renderTemplate('Offline/Login/new.html');
+        } else {
+            View::renderTemplate('Online/Budget/przychody.html');
+        }
     }
 
     public function createAction()

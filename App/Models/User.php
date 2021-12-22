@@ -8,6 +8,8 @@ use App\Token;
 use App\Mail;
 use Core\View;
 
+use Core\Error;
+
 /**
  * User model
  *
@@ -32,12 +34,15 @@ class User extends \Core\Model
 
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
 
-            $token = new Token();
-            $hashed_token = $token->getHash();
-            $this->activation_token = $token->getValue();
+            //$token = new Token();
+            //$hashed_token = $token->getHash();
+            //$this->activation_token = $token->getValue();
 
-            $sql = 'INSERT INTO users (name, email, password_hash, activation_hash)
-                    VALUES (:name, :email, :password_hash, :activation_hash)';
+            //$sql = 'INSERT INTO users (name, email, password_hash, activation_hash)
+            //        VALUES (:name, :email, :password_hash, :activation_hash)';
+
+            $sql = 'INSERT INTO users (name, email, password)
+            VALUES (:name, :email, :password_hash)';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -45,9 +50,13 @@ class User extends \Core\Model
             $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
             $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
-            $stmt->bindValue(':activation_hash', $hashed_token, PDO::PARAM_STR);
+            ///$stmt->bindValue(':activation_hash', $hashed_token, PDO::PARAM_STR);
 
-            return $stmt->execute();
+            $success = $stmt->execute();
+
+            $this->userid = $db->lastInsertId();
+
+            return $success;
         }
 
         return false;
@@ -64,7 +73,7 @@ class User extends \Core\Model
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
             $this->errors[] = 'Invalid email';
         }
-        if (static::emailExists($this->email, $this->id ?? null)) {
+        if (static::emailExists($this->email, $this->userid ?? null)) {
             $this->errors[] = 'email already taken';
         }
 
@@ -81,14 +90,24 @@ class User extends \Core\Model
             if (preg_match('/.*\d+.*/i', $this->password) == 0) {
                 $this->errors[] = 'Password needs at least one number';
             }
-        }        
+        }
+        
+        // Terms and conditions
+        if (!isset($this->terms)) {
+            $this->errors[] = 'Accepting terms and conditions required';
+        }
+
+        // Captcha
+        if (!isset($this->captcha)) {
+            $this->errors[] = 'Captcha required';
+        }
     }
  
     public static function emailExists($email, $ignore_id = null)
     {
         $user = static::findByEmail($email);
         if ($user) {
-            if ($user->id != $ignore_id) {
+            if ($user->userid != $ignore_id) {
                 return true;
             }
         } 
@@ -114,8 +133,9 @@ class User extends \Core\Model
     {
         $user = static::findByEmail($email);        
 
-        if ($user && $user->is_active) {
-            if (password_verify($password, $user->password_hash)) {
+        //if ($user && $user->is_active) {
+        if ($user) {
+            if (password_verify($password, $user->password)) {
                 return $user;
             }
         }
@@ -125,7 +145,7 @@ class User extends \Core\Model
 
     public static function findByID($id)
     {
-        $sql = 'SELECT * FROM users WHERE id = :id';
+        $sql = 'SELECT * FROM users WHERE userid = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -144,14 +164,14 @@ class User extends \Core\Model
         $this->remember_token = $token->getValue();
         $this->expiry_timestamp = time() + 60*60*24*30; //30 days from now
 
-        $sql = 'INSERT INTO remembered_logins (token_hash, user_id, expires_at)
+        $sql = 'INSERT INTO remembered_logins (tokenhash, userid, expiresat)
                 VALUES (:token_hash, :user_id, :expires_at)';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
         $stmt->bindValue(':token_hash', $hashed_token, PDO::PARAM_STR);
-        $stmt->bindValue(':user_id', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $this->userid, PDO::PARAM_INT);
         $stmt->bindValue(':expires_at', date('Y-m-d H:i:s', $this->expiry_timestamp), PDO::PARAM_STR);
         
         return $stmt->execute();
@@ -184,7 +204,7 @@ class User extends \Core\Model
 
         $stmt->bindValue(':token_hash', $hashed_token, PDO::PARAM_STR);
         $stmt->bindValue(':expires_at', date('Y-m-d H:i:s', $expiry_timestamp), PDO::PARAM_STR);
-        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $this->userid, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
@@ -240,7 +260,7 @@ class User extends \Core\Model
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $this->userid, PDO::PARAM_INT);
             $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
 
             return $stmt->execute();
@@ -301,7 +321,7 @@ class User extends \Core\Model
 
             $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
-            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $this->userid, PDO::PARAM_INT);
 
             if (isset($this->password)) {
                 $password_hash = password_hash($this->password, PASSWORD_DEFAULT);

@@ -210,15 +210,4 @@ class Router
 
         return $namespace;
     }
-
-    protected function console($data, $context = '') {
-
-        // Buffering to solve problems frameworks, like header() in this and not a solid return.
-        ob_start();
-        
-        $output = 'console.log(' . json_encode($data) . ');';
-        $output = sprintf('<script>%s</script>', $output);
-
-        echo $output;
-    }
 }

@@ -6,6 +6,7 @@ use App\Config;
 use Mailgun\Mailgun;
 
 class Mail {
+    /*
     public static function send($to, $subject, $text, $html) {
         $mg = Mailgun::create(Config::MAILGUN_API_KEY);
         $mg->messages()->send(Config::MAILGUN_DOMAIN, array(
@@ -15,5 +16,14 @@ class Mail {
             'text'	=> $text,
             'html' => $html
         ));
+    }*/
+
+    //WIP to be done at the end while testing server
+    public static function send($to, $subject, $text) {
+        mail(
+            $to,
+            $subject,
+            $text
+        );
     }
 }

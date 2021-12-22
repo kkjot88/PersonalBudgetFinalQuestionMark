@@ -1,9 +1,19 @@
-{% extends 'Online/base.html' %}
+{% extends 'Online/finance_base.html' %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Wydatki{% endblock %}
 
-{% block body %}
+{% block header %}
+    <h1>Wydatki</h1>
+{% endblock %}
 
-    <h1>WYDATKI</h1>
-
+{% block paymentMethod %}
+<div>
+    <label for="selectMethod" class="form-label">Metoda płatności:</label>
+    <select class="form-select" id="selectMethod">
+        <option selected>Open this select menu</option>
+        <option>One</option>
+        <option>Two</option>
+        <option>Three</option>
+    </select>
+</div>
 {% endblock %}
