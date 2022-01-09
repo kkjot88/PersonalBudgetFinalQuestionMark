@@ -1,14 +1,56 @@
 {% extends 'Online/base.html' %}
 
 {% block footer %}
-    <script>
-        {% if postData is empty %}
-            document.getElementById("postDates").submit();
-        {% endif %}
 
-        $("#selectPeriod").on('change', () => {
-            document.getElementById("postDates").submit();
+    <script src="/js/jsClasses/DateInput.js"></script>
+    <script src="/js/jsClasses/DateFrom.js"></script>
+    <script src="/js/jsClasses/DateTo.js"></script>
+    <script src="/js/jsClasses/FinancesTable.js"></script>
+    <script src="/js/jsClasses/IncomesTable.js"></script>
+    <script src="/js/jsClasses/ExpensesTable.js"></script>
+
+    <script>         
+        var incomesColumnHeaders = ['#', 'kwota', 'data', 'komentarz'];
+        var expensesColumnHeaders = ['#', 'kwota', 'metoda płatności', 'data', 'komentarz'];
+
+        var dateFrom = new DateFrom();
+        var dateTo = new DateTo();
+
+        var incomesTable = new IncomesTable("incomesTable", incomesColumnHeaders);
+        var expensesTable = new ExpensesTable("expensesTable", expensesColumnHeaders);        
+
+        let periodMethodCall = {"periodMethodCall":$("#selectPeriod option").val()};        
+        $.ajax({
+            type: "POST",
+            url: "/bilans/datePeriodMethodCall",
+            dataType: "json",
+            data: periodMethodCall,
+            success: formatPage,
+            async: false
+        })
+
+        $("#selectPeriod").on('change', function() {
+            periodMethodCall = {"periodMethodCall":this.value};
+            $.ajax({
+                type: "POST",
+                url: "/bilans/datePeriodMethodCall",           
+                dataType: "json",
+                data: periodMethodCall,     
+                success: formatPage
+            });
         });
+
+        function formatPage(data) {
+            console.log(data);
+            dateFrom.setData(data);
+            dateFrom.formatInput();
+            dateTo.setData(data); 
+            dateTo.formatInput();
+            incomesTable.setData(data);
+            incomesTable.formatTable();            
+            expensesTable.setData(data);
+            expensesTable.formatTable();
+        }                
     </script>
 {% endblock %}
 
@@ -18,16 +60,15 @@
 
     <h1>BILANS</h1>    
 
-    <form method="post" action="" id="postDates">              
-
+    <form method="post" action="/bilans/datePeriodMethodCall" id="postDates">
         <div class="form-group">
             <label for="selectPeriod" class="form-label">Okres bilansu:</label>
-            <select class="form-select" id="selectPeriod" name="period">      
-                {% for period in datePeriodCategories %}
-                    {% if postData.period == period %}
-                        <option selected>{{ period }}</option>   
+            <select class="form-select" id="selectPeriod" name="periodMethodCall">      
+                {% for periodText, methodCall in datePeriods %}
+                    {% if postData.period == periodText %}
+                        <option value="{{methodCall}}" selected>{{ periodText }}</option>   
                     {% else %}
-                        <option>{{ period }}</option>                    
+                        <option value="{{methodCall}}">{{ periodText }}</option>                    
                     {% endif %}
                 {% endfor %}
             </select>
@@ -36,69 +77,42 @@
             <label for="inputDateFrom" class="form-label">Data od:</label>
             <input id="inputDateFrom" name="dateFrom" placeholder="date" type="date"
             class="form-control"
-            value="{{ postData.dateFrom }}"
-            {% if postData.dateFrom and postData.period != 'Niestandardowy' %} readonly {% endif %}
             required/>
-        </div>
+        </div>        
         <div class="form-group">
             <label for="inputDateTo" class="form-label">Data do:</label>
             <input id="inputDateTo" name="dateTo" placeholder="date" type="date"
             class="form-control"
-            value="{{ postData.dateTo }}"
-            {% if postData.dateTo and postData.period != 'Niestandardowy' %} readonly {% endif %}
             required/>
         </div>        
-
-        <button type="submit" class="btn btn-primary">Dodaj</button>
-        <a class="btn btn-danger" href="" role="button">Anuluj</a>
-
     </form>
 
-    {% if incomesSum is not empty %}
-        <h4>Przychody:</h4>
-        <ul> 
-            {% for category, sum in incomesSum %}
-                <h5>{{ category }}, razem: {{ sum }}</h5>
-                {% if incomes is not empty %}                    
-                    <ul>
-                        {% for income in incomes %}    
-                            {% if income.category == category %}   
-                                <li>
-                                    <strong>kwota: </strong>{{ income.amount }},
-                                    <strong>data: </strong>{{ income.date }},
-                                    <strong>kategoria: </strong>{{income.category}},
-                                    <strong>komentarz: </strong>{{income.comment}}
-                                </li>       
-                            {% endif %}                
-                        {% endfor %}
-                    </ul> 
-                {% endif %}
-            {% endfor %}
-        </ul>
-    {% endif %}       
-    
-    {% if expensesSum is not empty %}
-        <h4>Wydatki:</h4>
-        <ul> 
-            {% for category, sum in expensesSum %}
-                <h5>{{ category }}, razem: {{ sum }}</h5>
-                {% if expenses is not empty %}                    
-                    <ul>
-                        {% for expense in expenses %}    
-                            {% if expense.category == category %}                       
-                            <li>
-                                <strong>kwota: </strong>{{ expense.amount }},
-                                <strong>data: </strong>{{ expense.date }},
-                                <strong>metoda płatności: </strong>{{ expense.method }},
-                                <strong>kategoria: </strong>{{expense.category}},
-                                <strong>komentarz: </strong>{{expense.comment}}
-                            </li>      
-                            {% endif %}                
-                        {% endfor %}
-                    </ul> 
-                {% endif %}
-            {% endfor %}
-        </ul>
-    {% endif %} 
+    <div class="container">
+        <div class="row">
+            <div class="col-6 border border-dark p-0">
+                <table class="table table-striped" id="incomesTable">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Przychody</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
+                    </tbody>        
+                </table>
+            </div>
+            <div class="col-6">
+                <table class="table table-striped" id="expensesTable">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Wydatki</th>
+                        </tr>
+                    </thead id="here">
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}

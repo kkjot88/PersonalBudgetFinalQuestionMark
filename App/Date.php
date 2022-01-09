@@ -2,8 +2,6 @@
 
 namespace App;
 
-use DateTime;
-
 class Date {
     public static function getFirstDayOfCurrentMonth() {  
         return date('Y-m-01', strtotime("m"));

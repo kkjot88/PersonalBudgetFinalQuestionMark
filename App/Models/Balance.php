@@ -2,172 +2,90 @@
 
 namespace App\Models;
 
-use App\Auth;
-use Core\Error;
+use App\Models\Incomes;
+use App\Models\Expenses;
 
-use App\Incomes;
-use App\Expenses;
-
-use App\Config;
-
-use App\PreviousMonth;
-use App\CurrentMonth;
-use App\Period;
 use App\Date;
-use PDO;
 
 class Balance extends \Core\Model {
 
-    protected $incomesTable = Config::INCOMES_TABLE;
-    protected $incomeCategories = Config::INCOMES_CATEGORIES;
-    protected $expensesTable = Config::EXPENSES_TABLE;
-    protected $expenseCategories = Config::EXPENSES_CATEGORIES;    
-    protected $datePeriods = Config::DATE_PERIODS;
+    protected $userId;
 
-    protected $userid;
-    protected $postData;
+    protected $incomes;
+    protected $expenses;
 
-    public function __construct($postData)
+    protected $givenPeriodFinances; 
+
+    public function __construct($userId)
     {
-        $this->userid = Auth::getUser()->userid;
-        $this->postData = $postData;
+        $this->userId = $userId;
+        $this->incomes = new Incomes($this->userId);
+        $this->expenses = new Expenses($this->userId);
     }
 
-    public function getFinancesByDates() {
-        if ($this->postData) {            
-            $method = $this->getMethodByPeriodText($this->postData["period"]);
-            return $this->$method();
-        }
-        return false;
+    protected function appendWithGivenPeriodFinances() {
+        $dateFrom = $this->givenPeriodFinances['dateFrom'];
+        $dateTo = $this->givenPeriodFinances['dateTo'];
+        $incomes = $this->incomes->getFinancesForGivenPeriod($dateFrom, $dateTo);
+        $expenses = $this->expenses->getFinancesForGivenPeriod($dateFrom, $dateTo);
+        $sumOfEachIncomeCategory = $this->incomes->getSumOfEachFinanceCategory($dateFrom, $dateTo);
+        $sumOfEachExpenseCategory = $this->expenses->getSumOfEachFinanceCategory($dateFrom, $dateTo);
+        $balance = [
+            'incomes' => $incomes,
+            'expenses' => $expenses,
+            'sumOfEachIncomeCategory' => $sumOfEachIncomeCategory,
+            'sumOfEachExpenseCategory' => $sumOfEachExpenseCategory
+        ];
+        $this->givenPeriodFinances['balance'] = $balance;
     }
-    
-    public function getDatePeriodsTexts() {
-        $datePeriodsTexts = [];
-        foreach ($this->datePeriods as $periodText => $methodCall) {
-            array_push($datePeriodsTexts, $periodText);
-        }
-        return $datePeriodsTexts;
-    }    
-    
-    protected function getMethodByPeriodText ($periodText) {
-        return $this->datePeriods[$periodText];
-    }
-    
-    protected function getGivenPeriodFinances($financesTable, $financesCategory, $dateFrom, $dateTo) {
 
-        $methodTable = Config::PAYMENT_METHODS;
-
-        $sql = "SELECT
-                    f.amount AS amount,
-                    f.date AS date,
-                    f.comment AS comment," 
-                    .(($financesTable == Config::EXPENSES_TABLE) ? "m.method AS method," : "").
-                    "fc.category AS category                    
-                FROM $financesTable f
-                LEFT OUTER JOIN $financesCategory fc
-                USING (categoryid)"
-                .
-                (($financesTable == Config::EXPENSES_TABLE) ? "LEFT OUTER JOIN $methodTable m
-                USING (methodid)" : "")                
-                ."
-                WHERE f.userid = :userid AND f.date >= :dateFrom AND f.date <= :dateTo";
-
-
-        $db = static::getDB();
-        $stmt = $db->prepare($sql);
+    public function getCurrentMonthFinances ($postData) {
+        $this->givenPeriodFinances = [
+            'dateFrom' => Date::getFirstDayOfCurrentMonth(),
+            'dateTo' => Date::getLastDayOfCurrentMonth(),
+            'datePickersDisabled' => true
+        ];
         
-        $stmt->bindValue(':userid', $this->userid, PDO::PARAM_INT);        
-        $stmt->bindValue(':dateFrom', $dateFrom, PDO::PARAM_STR);        
-        $stmt->bindValue(':dateTo', $dateTo, PDO::PARAM_STR);        
+        $this->appendWithGivenPeriodFinances();
 
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $stmt->execute();
-        return $stmt->fetchAll();
+        return $this->givenPeriodFinances;
     }
 
-    protected function getGivenPeriodFinancesSum($financesTable, $financesCategory, $dateFrom, $dateTo) {        
-        $sql = "SELECT 
-                    fc.category AS category,
-                    SUM(f.amount) AS amount
-                FROM $financesTable f
-                INNER JOIN $financesCategory fc
-                USING (categoryid)
-                WHERE f.userid = :userid AND f.date >= :dateFrom AND f.date <= :dateTo
-                GROUP BY f.categoryid 
-                ORDER BY SUM(f.amount) DESC";
-
-        $db = static::getDB();
-        $stmt = $db->prepare($sql);
+    public function getPreviousMonthFinances ($postData) {
+        $this->givenPeriodFinances = [
+            'dateFrom' => Date::getFirstDayOfPreviousMonth(),
+            'dateTo' => Date::getLastDayOfPreviousMonth(),
+            'datePickersDisabled' => true
+        ];
         
-        $stmt->bindValue(':userid', $this->userid, PDO::PARAM_INT);        
-        $stmt->bindValue(':dateFrom', $dateFrom, PDO::PARAM_STR);        
-        $stmt->bindValue(':dateTo', $dateTo, PDO::PARAM_STR);        
+        $this->appendWithGivenPeriodFinances();
 
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $stmt->execute();
-        return $this->formatFinancesSumArray($stmt->fetchAll());
-    }    
+        return $this->givenPeriodFinances;
+    }
 
-    protected function formatFinancesSumArray($finances) {
-        if ($finances) {
-            foreach ($finances as $finance) {
-                $IncomesFormated[$finance['category']] = $finance['amount'];
-            }
-            return $IncomesFormated;
+    public function getCurrentYearFinances ($postData) {
+        $this->givenPeriodFinances = [
+            'dateFrom' => Date::getFirstDayOfCurrentYear(),
+            'dateTo' => Date::getLastDayOfCurrentYear(),
+            'datePickersDisabled' => true
+        ];
+        
+        $this->appendWithGivenPeriodFinances();
+
+        return $this->givenPeriodFinances;
+    }
+
+    public function getCustomPeriodFinances ($postData) {
+        $this->givenPeriodFinances = [ 
+            'datePickersDisabled' => false
+        ];
+                                        
+        if (isset($postData['dateFrom']) && isset($postData['dateTo'])) {
+            $this->givenPeriodFinances['dateFrom'] = $postData['dateFrom'];
+            $this->givenPeriodFinances['dateTo'] = $postData['dateTo'];            
+            $this->appendWithGivenPeriodFinances();
         }
-        return $finances;
-    }
 
-    protected function appendFinancesWithPostData($incomes, $incomesSum, $expenses, $expensesSum, $dateFrom, $dateTo) {
-        $financesWithPostData = [];
-        $financesWithPostData['incomes'] = $incomes;
-        $financesWithPostData['incomesSum'] = $incomesSum;
-        $financesWithPostData['expenses'] = $expenses;
-        $financesWithPostData['expensesSum'] = $expensesSum;
-        $this->postData['dateFrom'] = $dateFrom;
-        $this->postData['dateTo'] = $dateTo;
-        $financesWithPostData['post'] = $this->postData;
-        return $financesWithPostData;
+        return $this->givenPeriodFinances;
     }
-
-    protected function getCurrentMonthFinances() {
-        $dateFrom = Date::getFirstDayOfCurrentMonth();
-        $dateTo = Date::getLastDayOfCurrentMonth();
-        $incomes = $this->getGivenPeriodFinances($this->incomesTable, $this->incomeCategories, $dateFrom, $dateTo);
-        $incomesSum = $this->getGivenPeriodFinancesSum($this->incomesTable, $this->incomeCategories, $dateFrom, $dateTo);
-        $expenses = $this->getGivenPeriodFinances($this->expensesTable, $this->expenseCategories, $dateFrom, $dateTo);
-        $expensesSum = $this->getGivenPeriodFinancesSum($this->expensesTable, $this->expenseCategories, $dateFrom, $dateTo);
-        return $this->appendFinancesWithPostData($incomes, $incomesSum, $expenses, $expensesSum, $dateFrom, $dateTo);
-    }
-
-    public function getPreviousMonthFinances() {        
-        $dateFrom = Date::getFirstDayOfPreviousMonth();
-        $dateTo = Date::getLastDayOfPreviousMonth();
-        $incomes = $this->getGivenPeriodFinances($this->incomesTable, $this->incomeCategories, $dateFrom, $dateTo);
-        $incomesSum = $this->getGivenPeriodFinancesSum($this->incomesTable, $this->incomeCategories, $dateFrom, $dateTo);
-        $expenses = $this->getGivenPeriodFinances($this->expensesTable, $this->expenseCategories, $dateFrom, $dateTo);
-        $expensesSum = $this->getGivenPeriodFinancesSum($this->expensesTable, $this->expenseCategories, $dateFrom, $dateTo);
-        return $this->appendFinancesWithPostData($incomes, $incomesSum, $expenses, $expensesSum, $dateFrom, $dateTo);
-    }
-
-    public function getCurrentYearFinances() {
-        $dateFrom = Date::getFirstDayOfCurrentYear();
-        $dateTo = Date::getLastDayOfCurrentYear();
-        $incomes = $this->getGivenPeriodFinances($this->incomesTable, $this->incomeCategories, $dateFrom, $dateTo);
-        $incomesSum = $this->getGivenPeriodFinancesSum($this->incomesTable, $this->incomeCategories, $dateFrom, $dateTo);
-        $expenses = $this->getGivenPeriodFinances($this->expensesTable, $this->expenseCategories, $dateFrom, $dateTo);
-        $expensesSum = $this->getGivenPeriodFinancesSum($this->expensesTable, $this->expenseCategories, $dateFrom, $dateTo);
-        return $this->appendFinancesWithPostData($incomes, $incomesSum, $expenses, $expensesSum, $dateFrom, $dateTo);
-    }
-
-    public function getCustomPeriodFinances() {
-        $dateFrom = $this->postData['dateFrom'];
-        $dateTo = $this->postData['dateTo'];
-        $incomes = $this->getGivenPeriodFinances($this->incomesTable, $this->incomeCategories, $dateFrom, $dateTo);
-        $incomesSum = $this->getGivenPeriodFinancesSum($this->incomesTable, $this->incomeCategories, $dateFrom, $dateTo);
-        $expenses = $this->getGivenPeriodFinances($this->expensesTable, $this->expenseCategories, $dateFrom, $dateTo);
-        $expensesSum = $this->getGivenPeriodFinancesSum($this->expensesTable, $this->expenseCategories, $dateFrom, $dateTo);
-        return $this->appendFinancesWithPostData($incomes, $incomesSum, $expenses, $expensesSum, $dateFrom, $dateTo);
-    }
-
 }

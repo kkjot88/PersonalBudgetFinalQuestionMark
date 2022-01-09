@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Auth;
-use \App\Models\Expense;
+use \App\Models\Expenses;
 use \App\Models\ExpenseCategories;
 use Core\Error;
 
@@ -16,7 +16,7 @@ class Wydatki extends Authenticated {
     protected function before() {
         parent::before();
         $this->user = Auth::getUser();
-        $this->expense = new Expense($_POST);
+        $this->expenses = new Expenses($this->user->userid, $_POST);
         $this->methods = new PaymentMethods();
         $this->expenseCategories = new ExpenseCategories();
     }
@@ -26,18 +26,18 @@ class Wydatki extends Authenticated {
             'user' => $this->user,
             'methods' => $this->methods->fetchAll(),
             'categories' => $this->expenseCategories->fetchAll(),
-            'finance' => $this->expense
+            'finance' => $this->expenses
         ]);
         Error::console($this->methods->fetchAll());
     }  
 
     public function addAction () {   
         if ($_POST) {
-            if ($this->expense->Add($this->user->userid)) {
+            if ($this->expenses->Add($this->user->userid)) {
                 Flash::addMessage('Wydatek dodany pomyślnie');
                 $this->redirect('/wydatki/index');
             } else {
-                $this->user->errors[] = $this->expense->error;
+                $this->user->errors[] = $this->expenses->error;
                 $this->indexAction();
             }
         } else {

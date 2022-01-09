@@ -38,4 +38,9 @@ class Config
                             "Poprzedni miesiąc" => "getPreviousMonthFinances",
                             "Bieżący rok" => "getCurrentYearFinances",
                             "Niestandardowy" => "getCustomPeriodFinances"];
+
+    const DATE_PERIODS_FINAL = ["Bieżący miesiąc" => "getCurrentMonthFinances",
+                                "Poprzedni miesiąc" => "getPreviousMonthFinances",
+                                "Bieżący rok" => "getCurrentYearFinances",
+                                "Niestandardowy" => "getCustomPeriodFinances",];
 }

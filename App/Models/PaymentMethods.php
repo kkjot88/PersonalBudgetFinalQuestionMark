@@ -13,6 +13,10 @@ class PaymentMethods extends \Core\Model {
     protected $defaultsTableName = Config::PAYMENT_METHDOS_DEFAULTS;
     protected $relationsTableName = Config::USERS_PAYMENTMETHODS_RELATIONS;
 
+    public function getMethodsTableName() {
+        return $this->methodsTableName;
+    }
+
     public function fetchAll() {
         $sql = "SELECT * 
                 FROM $this->methodsTableName";

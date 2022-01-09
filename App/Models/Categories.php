@@ -11,6 +11,10 @@ abstract class Categories extends \Core\Model {
     protected $categoriesTableName;
     protected $defaultsTableName;
     protected $relationsTableName;
+
+    public function getCategoriesTableName() {
+        return $this->categoriesTableName;
+    }
     
     public function fetchAll() {
         $sql = "SELECT * 
