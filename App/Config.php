@@ -31,8 +31,11 @@ class Config
 
     const PAYMENT_METHODS = 'paymentmethods';
     const PAYMENT_METHDOS_DEFAULTS = 'paymentmethods_default';
-    const USERS_PAYMENTMETHODS_RELATIONS = 'users_paymentmethods';
+    const USERS_PAYMENTMETHODS_RELATIONS = 'users_paymentmethods';    
 
-    const DATE_PERIOD_CATEGORIES = ["Bieżący miesiąc", "Poprzedni miesiąc", "Bieżący rok", "Niestandardowy"];
-    
+    // method implementation needs to be added to Balance model along with period
+    const DATE_PERIODS =   ["Bieżący miesiąc" => "getCurrentMonthFinances",
+                            "Poprzedni miesiąc" => "getPreviousMonthFinances",
+                            "Bieżący rok" => "getCurrentYearFinances",
+                            "Niestandardowy" => "getCustomPeriodFinances"];
 }

@@ -28,6 +28,7 @@ class Wydatki extends Authenticated {
             'categories' => $this->expenseCategories->fetchAll(),
             'finance' => $this->expense
         ]);
+        Error::console($this->methods->fetchAll());
     }  
 
     public function addAction () {   
