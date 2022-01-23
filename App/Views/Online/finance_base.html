@@ -43,7 +43,7 @@
         </div>
         {% block paymentMethod %}
         {% endblock %}
-        <div>
+        <div class="form-group">
             <label for="selectCategory" class="form-label">Kategoria:</label>
             <select class="form-select" id="selectCategory" name="category">      
                 {% for category in categories %}
@@ -55,7 +55,7 @@
                 {% endfor %}
             </select>
         </div>
-        <div>
+        <div class="form-group">
             <label for="textareaComment" class="form-label">Komentarz:</label>
             <textarea class="form-control" id="textareaComment" name="comment" rows="4"></textarea>
         </div>

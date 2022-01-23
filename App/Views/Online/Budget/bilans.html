@@ -1,24 +1,75 @@
 {% extends 'Online/base.html' %}
 
-{% block title %}Profile{% endblock %}
+{% block footer %}
+
+    <script src="/js/jsClasses/DateInput.js"></script>
+    <script src="/js/jsClasses/DateFrom.js"></script>
+    <script src="/js/jsClasses/DateTo.js"></script>
+    <script src="/js/jsClasses/FinancesTable.js"></script>
+    <script src="/js/jsClasses/IncomesTable.js"></script>
+    <script src="/js/jsClasses/ExpensesTable.js"></script>
+
+    <script>         
+        var incomesColumnHeaders = ['#', 'kwota', 'data', 'komentarz'];
+        var expensesColumnHeaders = ['#', 'kwota', 'metoda płatności', 'data', 'komentarz'];
+
+        var dateFrom = new DateFrom();
+        var dateTo = new DateTo();
+
+        var incomesTable = new IncomesTable("incomesTable", incomesColumnHeaders);
+        var expensesTable = new ExpensesTable("expensesTable", expensesColumnHeaders);        
+
+        let periodMethodCall = {"periodMethodCall":$("#selectPeriod option").val()};        
+        $.ajax({
+            type: "POST",
+            url: "/bilans/datePeriodMethodCall",
+            dataType: "json",
+            data: periodMethodCall,
+            success: formatPage,
+            async: false
+        })
+
+        $("#selectPeriod").on('change', function() {
+            periodMethodCall = {"periodMethodCall":this.value};
+            $.ajax({
+                type: "POST",
+                url: "/bilans/datePeriodMethodCall",           
+                dataType: "json",
+                data: periodMethodCall,     
+                success: formatPage
+            });
+        });
+
+        function formatPage(data) {
+            console.log(data);
+            dateFrom.setData(data);
+            dateFrom.formatInput();
+            dateTo.setData(data); 
+            dateTo.formatInput();
+            incomesTable.setData(data);
+            incomesTable.formatTable();            
+            expensesTable.setData(data);
+            expensesTable.formatTable();
+        }                
+    </script>
+{% endblock %}
+
+{% block title %}Bilans{% endblock %}
 
 {% block body %}
 
-    <h1>BILANS</h1>
+    <h1>BILANS</h1>    
 
-    <form method="post" action="" id="postDates">              
-
+    <form method="post" action="/bilans/datePeriodMethodCall" id="postDates">
         <div class="form-group">
-            <!-- <label for="inputAmount" class="form-label">Kwota:</label> -->
-            <input type="hidden" id="inputAmount" name="amount" placeholder="Kwota"
-            class="form-control"
-            autofocus required/>
-        </div>
-        <div>
             <label for="selectPeriod" class="form-label">Okres bilansu:</label>
-            <select class="form-select" id="selectPeriod" name="period">      
-                {% for period in datePeriodCategories %}                    
-                    <option>{{ period }}</option>                    
+            <select class="form-select" id="selectPeriod" name="periodMethodCall">      
+                {% for periodText, methodCall in datePeriods %}
+                    {% if postData.period == periodText %}
+                        <option value="{{methodCall}}" selected>{{ periodText }}</option>   
+                    {% else %}
+                        <option value="{{methodCall}}">{{ periodText }}</option>                    
+                    {% endif %}
                 {% endfor %}
             </select>
         </div>
@@ -27,23 +78,41 @@
             <input id="inputDateFrom" name="dateFrom" placeholder="date" type="date"
             class="form-control"
             required/>
-        </div>
+        </div>        
         <div class="form-group">
             <label for="inputDateTo" class="form-label">Data do:</label>
             <input id="inputDateTo" name="dateTo" placeholder="date" type="date"
             class="form-control"
             required/>
-        </div>
-
-        
-        <div>
-            <label for="textareaComment" class="form-label">Komentarz:</label>
-            <textarea class="form-control" id="textareaComment" name="comment" rows="4"></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Dodaj</button>
-        <a class="btn btn-danger" href="" role="button">Anuluj</a>  
-
+        </div>        
     </form>
 
+    <div class="container">
+        <div class="row">
+            <div class="col-6 border border-dark p-0">
+                <table class="table table-striped" id="incomesTable">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Przychody</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>        
+                </table>
+            </div>
+            <div class="col-6">
+                <table class="table table-striped" id="expensesTable">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Wydatki</th>
+                        </tr>
+                    </thead id="here">
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}
