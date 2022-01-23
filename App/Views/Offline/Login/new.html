@@ -1,37 +1,61 @@
 {% extends "Offline/base.html" %}
 
-{% block title %}Log in{% endblock %}
+{% block title %}Zaloguj się!{% endblock %}
 
 {% block body %}
+    <form action="/login/create" method="post" class="min-vh-100 d-flex">
 
-    <h1>Log in</h1>
+        <div class="container my-auto">
 
-    <form action="/login/create" method="post">
+            <div class="row">
+                <h1 class="col-auto mx-auto">Budżet osobisty</h1>
+            </div>
 
-        <div class="form-group">
-            <label for="inputEmail">Email address</label>
-            <input type="email" id="inputEmail" name="email" placeholder="Email address" autofocus value="{{ email }}" />
-        </div>
-        <div class="form-group">
-            <label for="inputPassword">Password</label>
-            <input type="password" id="inputPassword" name="password" placeholder="Password" />
-        </div>
-        <div>
-            <label>
-                <input type="checkbox" name="remember_me"
-                {% if remember_me %}
-                    checked="checked"
-                {% endif %}
-                />Remember me
-            </label>
-        </div>
+            <div class="row">
+                <div class="col-3 mx-auto">
+                    <div class="form-group">
+                        <input type="email" id="inputEmail" name="email" placeholder="Email address" autofocus value="{{ email }}"
+                        class="form-control" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-3 mx-auto">
+                    <div class="form-group">
+                        <input type="password" id="inputPassword" name="password" placeholder="Password" 
+                        class="form-control"/>
+                    </div>
+                </div>
+            </div>
 
-        <button type="submit">Log in</button>
-        <!--</br>
-        <a href="/password/forgot">Forgot password?</a>-->
-        </br>
-        <a href="/signup/new">Dont have account yet?</a>
+            <div class="row">
+                <div class="col-3 mx-auto d-flex">
+                    <label class="mx-auto">
+                        <input type="checkbox" name="remember_me"
+                        {% if remember_me %}
+                            checked="checked"
+                        {% endif %}
+                        />
+                        <span>
+                            Zapamiętaj mnie
+                        </span> 
+                    </label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-3 mx-auto">                    
+                    <button class="btn btn-primary w-100" type="submit">Zaloguj się</button>                
+                </div>
+            </div>
+
+            </br>
+            <a href="">Forgot password?</a>
+            </br>
+            <a href="/signup/new">Dont have account yet?</a>   
+
+        </div>       
 
     </form>
-
 {% endblock %}
